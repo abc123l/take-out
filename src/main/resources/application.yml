@@ -20,4 +20,4 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 Reggie:
-  path: /usr/local/app/images
+  path: /usr/local/app/images/
