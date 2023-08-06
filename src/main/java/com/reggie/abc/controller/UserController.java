@@ -9,12 +9,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author abc
@@ -27,6 +29,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisTemplate redisTemplate;
     @PostMapping("/sendMsg")
     public R<String> sendMsg(@RequestBody User user, HttpSession session){
         //获取手机号
@@ -36,7 +40,11 @@ public class UserController {
         //调用短信api发送短信
 //        SMSUtils.sendMessage();
         //将生成的验证码保存到session
-        session.setAttribute(phone,code);
+//        session.setAttribute(phone,code);
+
+        //将生成的验证码放到redis当中，并设置有效期为5min
+        redisTemplate.opsForValue().set(phone,code,5, TimeUnit.MINUTES);
+
         log.info("手机号{}生成的验证码为{}",phone,code);
         return R.success("手机验证码发送成功");
     }
@@ -48,7 +56,9 @@ public class UserController {
         String phone = map.get("phone").toString();
         String code = map.get("code").toString();
         //在session中获取该手机号对应的验证码
-        Object codeInSession = session.getAttribute(phone);
+//        Object codeInSession = session.getAttribute(phone);
+        //从redis中取验证码
+        Object codeInSession = redisTemplate.opsForValue().get(phone);
         //比对
         if (codeInSession!=null && codeInSession.equals(code)){
             //判断手机号是否在user表里面，如果没有就保存下来
@@ -62,6 +72,8 @@ public class UserController {
             }
 
             session.setAttribute("user",user.getId());
+            //如果用户登录成功，删除redis中的手机号验证码
+            redisTemplate.delete(phone);
             return R.success(user);
         }
         return R.error("登陆失败，用户填写的验证码与系统session中该手机的验证码不一致");
