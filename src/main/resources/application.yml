@@ -5,12 +5,12 @@ spring:
     name: reggie_take_out
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.208.132:3306/reggie?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://192.168.208.134:3306/reggie?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true
     username: root
     password: 1234
   data:
     redis:
-      host: 192.168.208.132
+      host: 192.168.208.134
       port: 6379
       password: abc123
       database: 0
