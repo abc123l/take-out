@@ -1,13 +1,36 @@
 server:
   port: 8080
 spring:
+  #读写分离时druid会创建dataSource shardingjdbc也会创建dataSource
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: reggie_take_out
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.208.134:3306/reggie?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true
-    username: root
-    password: 1234
+  shardingsphere:
+    datasource:
+      names: master, slave
+      master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.208.134:3306/reggie?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true
+        username: root
+        password: 1234
+      slave:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.208.135:3306/reggie?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true
+        username: root
+        password: 1234
+    masterslave:
+      master-data-source-name: master
+      slave-data-source-names: slave
+      name: dataSource
+      load-balance-algorithm-type: round_robin
+      props:
+        sql:
+          show: true #开启SQL显示，默认false
+
+
   data:
     redis:
       host: 192.168.208.134

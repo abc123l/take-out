@@ -5,9 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cache.annotation.EnableCaching;
 
-@SpringBootApplication
 @ServletComponentScan
 @EnableCaching
+@SpringBootApplication
+
 public class AbcApplication {
 
     public static void main(String[] args) {
