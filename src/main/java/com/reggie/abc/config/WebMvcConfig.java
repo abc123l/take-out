@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Slf4j
 @Configuration
+
 public class WebMvcConfig implements WebMvcConfigurer {
     /**
      * 设置静态资源映射

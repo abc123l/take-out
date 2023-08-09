@@ -52,5 +52,5 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 Reggie:
-#  path: /usr/local/app/images/
-  path: D:\idea_java_projects\study\reggie\images\
+  path: /usr/local/app/images/
+#  path: D:\idea_java_projects\study\reggie\images\
